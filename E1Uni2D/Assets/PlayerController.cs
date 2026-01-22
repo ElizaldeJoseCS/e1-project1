@@ -12,6 +12,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float speed = 10f;
     [SerializeField] float jumpPower = 50f;
     [SerializeField] float dashSpeed = 50f;
+    int collectalbeCount = 0;
+
+
 
 
     void OnMove(InputValue value)
@@ -78,6 +81,16 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.CompareTag("Ground"))
         {
             isGrounded = false;
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Collectable"))
+        {
+            Destroy(other.gameObject);
+            ++collectalbeCount;
+            Debug.Log("Collectables: " + collectalbeCount);
         }
     }
 
