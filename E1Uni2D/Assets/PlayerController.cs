@@ -6,14 +6,13 @@ public class PlayerController : MonoBehaviour
     float movementY;
     Rigidbody2D rb;
     bool isGrounded = false;
-    int score = 0;
 
 
     [SerializeField] float speed = 10f;
     [SerializeField] float jumpPower = 50f;
     [SerializeField] float dashSpeed = 50f;
     int collectalbeCount = 0;
-
+    bool isDashing = false;
 
 
 
@@ -83,15 +82,6 @@ public class PlayerController : MonoBehaviour
             isGrounded = false;
         }
 
-    }
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.gameObject.CompareTag("Collectable"))
-        {
-            score++;
-            Debug.Log("Score is: " + score);
-            other.gameObject.SetActive(false);
-        }
     }
 
     void OnTriggerEnter2D(Collider2D other)
