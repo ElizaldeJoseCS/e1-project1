@@ -6,9 +6,12 @@ public class PlayerController : MonoBehaviour
     float movementY;
     Rigidbody2D rb;
     bool isGrounded = false;
+    bool isDashing = false;
+
 
     [SerializeField] float speed = 10f;
-    [SerializeField] float jumpPower = 100f;
+    [SerializeField] float jumpPower = 50f;
+    [SerializeField] float dashSpeed = 50f;
 
 
     void OnMove(InputValue value)
@@ -18,7 +21,28 @@ public class PlayerController : MonoBehaviour
         movementY = v.y;
         Debug.Log("Movement X = " + movementX);
         Debug.Log("Movement Y = " + movementY);
+
     }
+    void OnDash() // Added this dash method 
+    {
+        if (isDashing) return;
+
+        Vector2 dashDirection = new Vector2(movementX, movementY);
+
+        if (dashDirection == Vector2.zero)
+            dashDirection = Vector2.right * transform.localScale.x;
+
+        isDashing = true;
+
+        rb.linearVelocity = dashDirection.normalized * dashSpeed;
+
+        Invoke(nameof(StopDash), 0.15f); // dash duration
+    } 
+
+        void StopDash()
+        {
+            isDashing = false;
+        }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -32,10 +56,11 @@ public class PlayerController : MonoBehaviour
         // float movementDistanceX = movementX * speed * Time.deltaTime;
         // float movementDistanceY = movementY * speed * Time.deltaTime;
         // transform.position = new Vector2(transform.position.x + movementDistanceX, transform.position.y + movementDistanceY);
+    if (!isDashing)
+    {
         rb.linearVelocity = new Vector2(movementX * speed, rb.linearVelocity.y);
-
-
-        if (movementY > 0 && isGrounded)
+    }
+    if (movementY > 0 && isGrounded)
         {
             rb.AddForce(new Vector2(0, jumpPower));
         }
@@ -55,5 +80,6 @@ public class PlayerController : MonoBehaviour
             isGrounded = false;
         }
     }
+
 
 }
