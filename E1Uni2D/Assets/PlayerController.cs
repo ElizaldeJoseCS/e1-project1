@@ -6,6 +6,8 @@ public class PlayerController : MonoBehaviour
     float movementY;
     Rigidbody2D rb;
     bool isGrounded = false;
+    int score = 0;
+
 
     [SerializeField] float speed = 10f;
     [SerializeField] float jumpPower = 100f;
@@ -53,6 +55,16 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.CompareTag("Ground"))
         {
             isGrounded = false;
+        }
+
+    }
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Collectable"))
+        {
+            score++;
+            Debug.Log("Score is: " + score);
+            other.gameObject.SetActive(false);
         }
     }
 

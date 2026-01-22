@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Feet
   - Ground
+  - Collectable
   layers:
   - Default
   - TransparentFX
