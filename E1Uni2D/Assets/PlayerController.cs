@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float dashSpeed = 50f;
     int collectalbeCount = 0;
     bool isDashing = false;
+    Animator animator;
+    SpriteRenderer spriteRenderer;
 
 
 
@@ -31,8 +33,6 @@ public class PlayerController : MonoBehaviour
 
         Vector2 dashDirection = new Vector2(movementX, movementY);
 
-        if (dashDirection == Vector2.zero)
-            dashDirection = Vector2.right * transform.localScale.x;
 
         isDashing = true;
 
@@ -49,6 +49,8 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
 
@@ -58,14 +60,40 @@ public class PlayerController : MonoBehaviour
         // float movementDistanceX = movementX * speed * Time.deltaTime;
         // float movementDistanceY = movementY * speed * Time.deltaTime;
         // transform.position = new Vector2(transform.position.x + movementDistanceX, transform.position.y + movementDistanceY);
-    if (!isDashing)
-    {
-        rb.linearVelocity = new Vector2(movementX * speed, rb.linearVelocity.y);
-    }
-    if (movementY > 0 && isGrounded)
+        if (!isDashing)
+        {
+            rb.linearVelocity = new Vector2(movementX * speed, rb.linearVelocity.y);
+        }
+        if (movementY > 0 && isGrounded)
         {
             rb.AddForce(new Vector2(0, jumpPower));
         }
+        
+        if (!Mathf.Approximately(movementX, 0f))
+        {
+            spriteRenderer.flipX = movementX < 0;
+            animator.SetBool("isRunning", true);
+        }
+
+        else
+        {
+            animator.SetBool("isRunning", false);
+        }
+        if (rb.linearVelocity.y > 0){
+            animator.SetBool("isJumping", true);
+            animator.SetBool("isFalling", false);
+
+        }
+
+        else if(rb.linearVelocity.y < 0){
+            animator.SetBool("isJumping", false);
+            animator.SetBool("isFalling", true);
+        }
+        else{
+            animator.SetBool("isJumping", false);
+            animator.SetBool("isFalling", false);
+        }
+
 
     }
     void OnCollisionEnter2D(Collision2D other)
